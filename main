@@ -4,7 +4,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 local Window = Fluent:CreateWindow({
 Title = "Visual BETA " .. Fluent.Version,
-SubTitle = "by Tevfn",
+SubTitle = "by Tevfn mod by Dat Mod",
 TabWidth = 160,
 Size = UDim2.fromOffset(580, 460),
 Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
@@ -130,7 +130,7 @@ end
 })
 
 Tabs.Main:AddButton({
-Title = "Red Circle",
+Title = "Auto Parry by Dat Mod",
 Callback = function()
 Window:Dialog({
 Title = "User",
