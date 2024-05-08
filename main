@@ -1,0 +1,400 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+Title = "Visual BETA " .. Fluent.Version,
+SubTitle = "by Tevfn",
+TabWidth = 160,
+Size = UDim2.fromOffset(580, 460),
+Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+Theme = "Light",
+MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+})
+
+--Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
+local Tabs = {
+Info = Window:AddTab({ Title = "Info", Icon = "info" }),
+Main = Window:AddTab({ Title = "Main", Icon = "layers" }),
+Abilities = Window:AddTab({ Title = "Abilities", Icon = "gem" }),
+Character = Window:AddTab({ Title = "Player", Icon = "person-standing" }),
+Server = Window:AddTab({ Title = "Server", Icon = "rss" }),
+Settings = Window:AddTab({ Title = "Settings", Icon = "settings" }),
+Credits = Window:AddTab({ Title = "Credits", Icon = "crown" }),
+}
+
+local Options = Fluent.Options
+
+do
+Fluent:Notify({
+Title = "Notification",
+Content = "Last Update 5/6/2024",
+SubContent = ".gg/52JdnPCzWr", -- Optional
+Duration = 3 -- Set to nil to make the notification not disappear
+})
+
+Tabs.Info:AddButton({
+Title = "Information",
+Description = "Script Is Made By @Tevfn On Discord.",
+Callback = function(v)
+end
+})
+
+Tabs.Main:AddButton({
+Title = "Blade Ball",
+Description = "Best Script For Blade Ball.",
+Callback = function()
+Window:Dialog({
+Title = "User",
+Content = "Are You Sure?",
+Buttons = {
+{
+Title = "Yes",
+
+Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FFJ1/Roblox-Exploits/main/scripts/autoparry.lua"))()
+end
+},
+{
+Title = "No",
+Callback = function()
+print("Cancelled the dialog.")
+end
+}
+}
+})
+end
+})
+
+Tabs.Character:AddButton({
+Title = "Fly",
+Callback = function()
+Window:Dialog({
+Title = "User",
+Content = "Are You Sure?",
+Buttons = {
+{
+Title = "Yes",
+Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+end
+},
+{
+Title = "No",
+Callback = function()
+print("Cancelled the dialog.")
+end
+}
+}
+})
+end
+})
+
+Tabs.Server:AddButton({
+Title = "Auto Rejoin",
+Callback = function()
+Window:Dialog({
+Title = "User",
+Content = "Are You Sure?",
+Buttons = {
+{
+Title = "Yes",
+Callback = function()
+-- rejoin
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local Rejoin = coroutine.create(function()
+local Success, ErrorMessage = pcall(function()
+TeleportService:Teleport(game.PlaceId, LocalPlayer)
+end)
+
+if ErrorMessage and not Success then
+warn(ErrorMessage)
+end
+end)
+
+coroutine.resume(Rejoin)
+end
+},
+{
+Title = "No",
+Callback = function()
+print("Cancelled the dialog.")
+end
+}
+}
+})
+end
+})
+
+Tabs.Main:AddButton({
+Title = "Red Circle",
+Callback = function()
+Window:Dialog({
+Title = "User",
+Content = "Are You Sure?",
+Buttons = {
+{
+Title = "Yes",
+Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/1f0yt/community/main/Circle"))()
+end
+},
+{
+Title = "No",
+Callback = function()
+print("Cancelled the dialog.")
+end
+}
+}
+})
+end
+})
+
+
+local Toggle = Tabs.Character:AddToggle("MyToggle", {Title = "Infinity Jumps", Default = true })
+
+Toggle:OnChanged(function()
+--Toggles the infinite jump between on or off on every script run
+_G.infinjump = not _G.infinjump
+
+if _G.infinJumpStarted == nil then
+--Ensures this only runs once to save resources
+_G.infinJumpStarted = true
+
+--The actual infinite jump
+local plr = game:GetService('Players').LocalPlayer
+local m = plr:GetMouse()
+m.KeyDown:connect(function(k)
+if _G.infinjump then
+if k:byte() == 32 then
+humanoid = game:GetService'Players'.LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
+humanoid:ChangeState('Jumping')
+wait()
+humanoid:ChangeState('Seated')
+end
+end
+end)
+end
+end)
+
+Options.MyToggle:SetValue(false)
+
+
+
+local Slider = Tabs.Character:AddSlider("Slider", {
+Title = "WalkSpeed",
+Default = 2,
+Min = 16,
+Max = 1000,
+Rounding = 1,
+Callback = function(Value)
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+end
+})
+
+Slider:OnChanged(function(Value)
+print("Slider changed:", Value)
+end)
+
+Slider:SetValue(3)
+
+local Dropdown = Tabs.Credits:AddDropdown("Preview", {
+Title = "Preview",
+Values = {"Developer - Tevfn", "Scripter - Tevfn"},
+Multi = false,
+Default = "Whos Developer?",
+})
+
+
+local Dropdown = Tabs.Credits:AddDropdown("Discord", {
+Title = "Discord",
+Values = {".gg/52JdnPCzWr"},
+Multi = false,
+Default = "Join Rn!",
+})
+
+local Dropdown = Tabs.Abilities:AddDropdown("Target Player", {
+Title = "Target Player",
+Description = "Coming Soon.",
+Values = {"All","Random"},
+Multi = false,
+Default = "--",
+})
+
+Dropdown:SetValue("four")
+
+Dropdown:OnChanged(function(Value)
+print("Dropdown changed:", Value)
+end)
+
+Dropdown:SetValue("four")
+
+Dropdown:OnChanged(function(Value)
+print("Dropdown changed:", Value)
+end)
+
+Tabs.Abilities:AddButton({
+Title = "Refresh Players Dropdown",
+Callback = function(v)
+    print('Player Tapped Refresh!')
+end
+})
+
+local Dropdown = Tabs.Abilities:AddDropdown("Ability Chance", {
+Title = "Ability Chance",
+Description = "Determines The Chance Of The Auto Ability To Be Used.",
+Values = {"25", "50", "75", "100"},
+Multi = false,
+Default = "100",
+})
+
+Dropdown:SetValue("four")
+
+Dropdown:OnChanged(function(Value)
+print("Dropdown changed:", Value)
+end)
+
+local Input = Tabs.Abilities:AddInput("Input", {
+Title = "Required Velocity",
+Default = "100",
+Placeholder = "Placeholder",
+Numeric = true, -- Only allows numbers
+Finished = true, -- Only calls callback when you press enter
+Callback = function(Value)
+print("Input changed:", Value)
+end
+})
+
+local Input = Tabs.Abilities:AddInput("Input", {
+Title = "Additional Cooldown",
+Description = "Use 0 To Disable.",
+Default = "3",
+Placeholder = "Placeholder",
+Numeric = true, -- Only allows numbers
+Finished = true, -- Only calls callback when you press enter
+Callback = function(Value)
+print("Input changed:", Value)
+end
+})
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Anti Pull", Default = true })
+
+Toggle:OnChanged(function()
+    print("Anti Pull")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Pull", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Pull")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Flash Counter", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Flash Counter")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Telekinesis", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Telekinesis")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Rapture", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Rapture")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Raging Deflect", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Raging Deflect")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Force", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Force")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Death Slash", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Death Slash")
+end)
+
+local Toggle = Tabs.Abilities:AddToggle("MyToggle", {Title = "Auto Invisibility", Default = true })
+
+Toggle:OnChanged(function()
+    print("Auto Invisibility")
+end)
+
+local Colorpicker = Tabs.Character:AddColorpicker("Colorpicker", {
+Title = "Colorpicker",
+Default = Color3.fromRGB(0, 0, 0)
+})
+
+Colorpicker:OnChanged(function()
+print("Colorpicker changed:", Colorpicker.Value)
+end)
+
+
+local Input = Tabs.Info:AddInput("Input", {
+Title = "Copy Discord Invite!",
+Description = "Join our disord to stay updated.",
+Default = ".gg/52JdnPCzWr",
+Placeholder = "Placeholder",
+Numeric = true, -- Only allows numbers
+Text = true, -- Only calls callback when you press enter
+Callback = function(Value)
+print("Input changed:", Value)
+end
+})
+
+Input:OnChanged(function()
+print("Input updated:", Input.Value)
+end)
+end
+
+
+-- Addons:
+-- SaveManager (Allows you to have a configuration system)
+-- InterfaceManager (Allows you to have a interface managment system)
+
+-- Hand the library over to our managers
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+-- Ignore keys that are used by ThemeManager.
+-- (we dont want configs to save themes, do we?)
+SaveManager:IgnoreThemeSettings()
+
+-- You can add indexes of elements the save manager should ignore
+SaveManager:SetIgnoreIndexes({})
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+Title = "Visual",
+Content = "The script has been loaded.",
+Duration = 8
+})
+
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
